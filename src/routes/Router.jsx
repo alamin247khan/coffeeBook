@@ -8,10 +8,12 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <div>Error loading page</div>,
     children: [
       {
         path: '/',
         element: <Home />,
+        loader: () => fetch('../Data/Categories.json'),
       },
       {
         path: '/coffees',
