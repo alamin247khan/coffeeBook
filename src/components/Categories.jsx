@@ -1,19 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export default function Categories({ categories }) {
   return (
     <div>
       <div role="tablist" className="tabs tabs-lifted">
         {categories.map((category) => (
-          <Link
-            key={category.category}
-            to={`/category/${category.category}`}
+          <NavLink
+            key={category.id}
+            to={`/category/${category.slug}`}
             role="tab"
-            className="tab"
+            className={({ isActive }) => (isActive ? 'tab tab-active' : 'tab')}
           >
             {category.category}
-          </Link>
+          </NavLink>
         ))}
       </div>
     </div>

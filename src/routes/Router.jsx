@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout.jsx';
-import categoriesData from '../Data/Categories.json';
 import Home from '../pages/Home.jsx';
 import Coffees from '../pages/Coffees.jsx';
 import Dashboard from '../pages/Dashboard.jsx';
@@ -13,16 +12,38 @@ const router = createBrowserRouter([
     errorElement: <div>Error loading page</div>,
     children: [
       {
+        path: '/',
         element: <Home />,
-        loader: async () => categoriesData,
+        loader: () => fetch('/Data/categories.json'),
         children: [
           {
             index: true,
-            element: <div className="ml-8"><p>Please select a category.</p></div>,
+            element: (
+              <div className="mt-8 text-center">
+                <p>Select a category to start exploring our coffees!</p>
+              </div>
+            ),
           },
           {
-            path: 'category/:category',
+            path: 'category/:slug',
             element: <CoffeeCards />,
+            loader: async ({ params }) => {
+              const [coffeesRes, categoriesRes] = await Promise.all([
+                fetch('/Data/coffees.json'),
+                fetch('/Data/categories.json'),
+              ]);
+
+              const coffees = await coffeesRes.json();
+              const categories = await categoriesRes.json();
+
+              const currentCategory = categories.find(
+                (cat) => cat.slug === params.slug,
+              );
+
+              return coffees.filter(
+                (coffee) => coffee.category === currentCategory?.category,
+              );
+            },
           },
         ],
       },
