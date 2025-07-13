@@ -1,26 +1,28 @@
-import Banner from '../components/Banner.jsx';
-import Heading from '../components/Heading.jsx';
-import Categories from '../components/Categories.jsx';
-import { Outlet, useLoaderData } from 'react-router-dom';
+import { Outlet, useLoaderData } from 'react-router-dom'
+import Banner from '../components/Banner'
+import Heading from '../components/Heading'
+import Categories from '../components/Categories'
 
-export default function Home() {
-  const categories = useLoaderData();
-  console.log(categories);
+const Home = () => {
+  const categories = useLoaderData()
+  console.log(categories)
   return (
     <div>
+      {/* Banner */}
       <Banner />
-      <div className="my-10 max-w-[1200px] mx-auto px-4">
-        <div className="mb-10">
-          <Heading
-            title="Welcome to Coffee Book"
-            subtitle="This is a subtitle"
-          />
-        </div>
-        <div className="mb-8 flex justify-center flex-col items-center text-center">
-          <Categories categories={categories} />
-          <Outlet />
-        </div>
-      </div>
+      {/* Heading */}
+      <Heading
+        title='Browse Coffees by Category'
+        subtitle='Choose your desired coffee category to browse through specific coffees that fit in your taste.
+
+'
+      />
+      {/* Categories tab section */}
+      <Categories categories={categories} />
+      {/* Dynamic Nested Component */}
+      <Outlet />
     </div>
-  );
+  )
 }
+
+export default Home

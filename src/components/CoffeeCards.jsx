@@ -1,39 +1,36 @@
-
-import { useLoaderData } from 'react-router-dom';
-
-const CoffeeCard = ({ coffee }) => (
-  <div className="card bg-base-100 shadow-xl">
-    <figure className="h-56">
-      <img
-        src={coffee.image}
-        alt={coffee.name}
-        className="h-full w-full object-cover"
-      />
-    </figure>
-    <div className="card-body">
-      <h2 className="card-title">{coffee.name}</h2>
-      <p className="h-10 overflow-hidden text-sm">{coffee.description}</p>
-      <div className="card-actions justify-end mt-4">
-        <button className="btn btn-primary">View Details</button>
-      </div>
-    </div>
-  </div>
-);
+import { useLoaderData, useNavigate, useParams } from 'react-router-dom'
+import Card from './Card'
+import { useEffect, useState } from 'react'
 
 const CoffeeCards = () => {
-  const filteredCoffees = useLoaderData();
+  const navigate = useNavigate()
 
-  if (!filteredCoffees || filteredCoffees.length === 0) {
-    return <p className="mt-8 text-center">No coffees found for this category.</p>;
-  }
-
+  const data = useLoaderData()
+  const { category } = useParams()
+  const [coffees, setCoffees] = useState([])
+  useEffect(() => {
+    if (category) {
+      const filteredByCategory = [...data].filter(
+        coffee => coffee.category === category
+      )
+      setCoffees(filteredByCategory)
+    } else {
+      setCoffees(data.slice(0, 6))
+    }
+  }, [category, data])
+  console.log(data)
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-      {filteredCoffees.map((coffee) => (
-        <CoffeeCard key={coffee.id} coffee={coffee} />
-      ))}
-    </div>
-  );
-};
+    <>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-12'>
+        {coffees.map(coffee => (
+          <Card key={coffee.id} coffee={coffee} />
+        ))}
+      </div>
+      <button className='btn btn-warning' onClick={() => navigate('/coffees')}>
+        View All
+      </button>
+    </>
+  )
+}
 
-export default CoffeeCards;
+export default CoffeeCards
